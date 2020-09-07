@@ -1,0 +1,4 @@
+/Users/easyboom/CODE/php-src/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/easyboom/CODE/php-src/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/easyboom/CODE/php-src/cmake-build-debug/CMakeFiles/php_src_exec.dir
+/Users/easyboom/CODE/php-src/cmake-build-debug/CMakeFiles/makefile.dir

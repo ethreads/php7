@@ -1,0 +1,13 @@
+// $Id$
+// vim:ft=javascript
+
+// If your extension references something external, use ARG_WITH
+// ARG_WITH("ethreads", "for ethreads support", "no");
+
+// Otherwise, use ARG_ENABLE
+ARG_ENABLE("ethreads", "enable ethreads support", "no");
+
+if (PHP_ETHREADS != "no") {
+	EXTENSION("ethreads", "ethreads.c", PHP_EXTNAME_SHARED, "/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1");
+}
+
