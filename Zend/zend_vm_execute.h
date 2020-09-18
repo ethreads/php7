@@ -2249,16 +2249,17 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_INIT_NS_FCALL_BY_NAME_SPEC_CON
 	ZEND_VM_NEXT_OPCODE();
 }
 
+// 根据opcache计算得到handler
 static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_INIT_FCALL_SPEC_CONST_HANDLER(ZEND_OPCODE_HANDLER_ARGS)
 {
 	USE_OPLINE
 
-	zval *fname = EX_CONSTANT(opline->op2);
+	zval *fname = EX_CONSTANT(opline->op2);     // 调用的函数名称通过操作数2记录
 	zval *func;
 	zend_function *fbc;
 	zend_execute_data *call;
 
-	fbc = CACHED_PTR(Z_CACHE_SLOT_P(fname));
+	fbc = CACHED_PTR(Z_CACHE_SLOT_P(fname));    // 运行时缓存
 	if (UNEXPECTED(fbc == NULL)) {
 		func = zend_hash_find(EG(function_table), Z_STR_P(fname));
 		if (UNEXPECTED(func == NULL)) {
@@ -2267,7 +2268,7 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_INIT_FCALL_SPEC_CO
 			HANDLE_EXCEPTION();
 		}
 		fbc = Z_FUNC_P(func);
-		CACHE_PTR(Z_CACHE_SLOT_P(fname), fbc);
+		CACHE_PTR(Z_CACHE_SLOT_P(fname), fbc);  // fbc: 缓存的数据指针
 		if (EXPECTED(fbc->type == ZEND_USER_FUNCTION) && UNEXPECTED(!fbc->op_array.run_time_cache)) {
 			init_func_run_time_cache(&fbc->op_array);
 		}

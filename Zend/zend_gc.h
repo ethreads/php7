@@ -61,7 +61,7 @@
 	do {(v) = (v) | GC_COLOR;} while (0)
 
 typedef struct _gc_root_buffer {
-	zend_refcounted          *ref;
+	zend_refcounted          *ref;      //每个zend_value的gc信息
 	struct _gc_root_buffer   *next;     /* double-linked list               */
 	struct _gc_root_buffer   *prev;
 	uint32_t                 refcount;
@@ -78,22 +78,23 @@ struct _gc_additional_bufer {
 	gc_root_buffer        buf[GC_NUM_ADDITIONAL_ENTRIES];
 };
 
+// 垃圾收集器的全局数据结构
 typedef struct _zend_gc_globals {
-	zend_bool         gc_enabled;
-	zend_bool         gc_active;
-	zend_bool         gc_full;
+	zend_bool         gc_enabled;       // 是否启用gc
+	zend_bool         gc_active;        // 是否在垃圾检查过程中
+	zend_bool         gc_full;          // 缓存区是否已满
 
-	gc_root_buffer   *buf;				/* preallocated arrays of buffers   */
-	gc_root_buffer    roots;			/* list of possible roots of cycles */
-	gc_root_buffer   *unused;			/* list of unused buffers           */
-	gc_root_buffer   *first_unused;		/* pointer to first unused buffer   */
-	gc_root_buffer   *last_unused;		/* pointer to last unused buffer    */
+	gc_root_buffer   *buf;				/* preallocated arrays of buffers  启动时分配的用于保存可能垃圾的缓存区  */
+	gc_root_buffer    roots;			/* list of possible roots of cycles 指向buf中最新加入的一个可能垃圾 */
+	gc_root_buffer   *unused;			/* list of unused buffers     指向buf中没有使用的buffer      */
+	gc_root_buffer   *first_unused;		/* pointer to first unused buffer  指向buf中第一个没有使用的buffer  */
+	gc_root_buffer   *last_unused;		/* pointer to last unused buffer   指向buf尾部 */
 
-	gc_root_buffer    to_free;			/* list to free                     */
+	gc_root_buffer    to_free;			/* list to free     待释放的垃圾                */
 	gc_root_buffer   *next_to_free;
 
-	uint32_t gc_runs;
-	uint32_t collected;
+	uint32_t gc_runs;                   //统计gc运行次数
+	uint32_t collected;                 //统计已回收的垃圾数
 
 #if GC_BENCH
 	uint32_t root_buf_length;
